@@ -41,7 +41,7 @@ public:
         for (size_t i = 0; i < m_replicas; i++) {
             slot = m_hash(node + to_string(i));
             m_ring[slot] = node;
-            cout << "    add virtual node " << i << " , slot " << slot << endl;
+            cout << " add virtual node " << i << " , slot " << slot << endl;
         }
     }
 
@@ -68,42 +68,45 @@ public:
 
 private:
     map<size_t, string> m_ring;
-    const size_t m_replicas; // virtual nodes in consistent hashing
-    HashFunc  m_hash; // hash function used to map server name(node) and person's name(data)
+    const size_t m_replicas; // virtual node number
+    HashFunc  m_hash; // hash function object
 };
 
 struct Person {
-    Person(string name="", string addr = "", size_t phone = 0) :
-        m_name(name), m_addr(addr), m_phone(phone)
+    Person(int id = -1, string name="", string addr = "", size_t phone = 0) :
+        m_id(id), m_name(name), m_addr(addr), m_phone(phone)
     {
     }
 
+    int m_id;
     string m_name;
     string m_addr;
     size_t m_phone;
 };
 
+
+template <typename Key, typename Value>
 class CacheServer
 {
 public:
-    void Set(const string& key, const Person& value)
+    void Set(const Key& k, const Value& v)
     {
-        m_cache[key] = value;
+        m_cache[k] = v;
     }
 
-    Person Get(const string& key) const
+    Value Get(const Key& k) const
     {
-        Person value; // default person info
-        auto ite = m_cache.find(key);
+        Value v;
+        auto ite = m_cache.find(k);
         if (ite != m_cache.end()) {
-            value = ite->second;
+            v = ite->second;
         }
-        return value;
+        return v;
     }
 
-    void Remove(const string& key)
+    void Remove(const Key& k)
     {
-        auto ite = m_cache.find(key);
+        auto ite = m_cache.find(k);
         if (ite != m_cache.end()) {
             m_cache.erase(ite);
         }
@@ -111,32 +114,33 @@ public:
 
 private:
     // data can be stored on this server
-    // simply use person's name as key
-    map<string, Person> m_cache;
+    // simply use person's id as key
+    map<Key, Value> m_cache;
 };
 
 
 int main()
 {
-    map<string, CacheServer> servers;
+    map<string, CacheServer<int, Person>> servers;
     // initialize servers according to server host name
-    // here we have 4 servers used to store Person information
-    servers["cache1.wjin.org"] = CacheServer();
-    servers["cache2.wjin.org"] = CacheServer();
-    servers["cache3.wjin.org"] = CacheServer();
+    // here we have 3 servers used to store Person information
+    // CacheServer stores person as : <id, info>
+    servers["cache1.wjin.org"] = CacheServer<int, Person>();
+    servers["cache2.wjin.org"] = CacheServer<int, Person>();
+    servers["cache3.wjin.org"] = CacheServer<int, Person>();
 
     HashRing<HashFunction> ring(2);
 
-    // person info
+    // persons
     vector<Person> persons = {
-        { "Eric King",    "Shanghai",  1111 },
-        { "Peter Will",   "Beijing",   2222 },
-        { "Smith John",   "Shenzheng", 3333 },
-        { "Joe Richard",  "Guangzhou", 4444 },
-        { "Tim Hans",     "Chengdu",   5555 },
-        { "Tom Paul",     "Hangzhou",  6666 },
-        { "Kate James",   "Hangzhou",  7777 },
-        { "Jim Jordan",   "Hangzhou",  8888 },
+        { 1, "Eric King",    "Shanghai",  1111 },
+        { 2, "Peter Will",   "Beijing",   2222 },
+        { 3, "Smith John",   "Shenzheng", 3333 },
+        { 4, "Joe Richard",  "Guangzhou", 4444 },
+        { 5, "Tim Hans",     "Chengdu",   5555 },
+        { 6, "Tom Paul",     "Hangzhou",  6666 },
+        { 7, "Kate James",   "Hangzhou",  7777 },
+        { 8, "Jim Jordan",   "Hangzhou",  8888 },
     };
 
     // add server to the hash ring
@@ -146,24 +150,26 @@ int main()
     }
     cout << "-------------------------------------------------" << endl;
 
-    // store some data
+    // store person info
     for (auto p : persons) {
-        // map person's name to ring and find an appropriate server name
-        string host = ring.GetNode(p.m_name);
+        // use id + name to find an appropriate server name in ring
+        string host = ring.GetNode(to_string(p.m_id) + p.m_name);
         if (host.empty()) throw runtime_error("No server available");
-        cout << "storing " << p.m_name << " on server " << host << endl;
-        servers[host].Set(p.m_name, p);
+
+        cout << "storing ID " << p.m_id << " on server " << host << endl;
+        servers[host].Set(p.m_id, p);
     }
     cout << "-------------------------------------------------" << endl;
 
     // read data from server
     for (auto p : persons) {
-        string host = ring.GetNode(p.m_name); // which server?
-        CacheServer server = servers[host];
-        Person ret = server.Get(p.m_name); // read data
-        cout << p.m_name << " information stored on server " << host << endl;
-        cout << "     Name : " << ret.m_name << " Addr : " << \
-             ret.m_addr << " Phone : " << ret.m_phone << endl;
+        string host = ring.GetNode(to_string(p.m_id) + p.m_name);
+        CacheServer<int, Person> server = servers[host];
+
+        Person ret = server.Get(p.m_id); // read data
+        cout << "ID " << p.m_id << " stored on server " << host << endl;
+        cout << "  ID : " << p.m_id << " Name : " << ret.m_name << " Addr : " \
+             << ret.m_addr << " Phone : " << ret.m_phone << endl;
     }
     cout << "-------------------------------------------------" << endl;
 
@@ -175,12 +181,13 @@ int main()
     // we got default person info
     // however, other data won't be affected, that is consistent hashing
     for (auto p : persons) {
-        string host = ring.GetNode(p.m_name);
-        CacheServer server = servers[host];
-        Person ret = server.Get(p.m_name); // read data
-        cout << p.m_name << " information stored on server " << host << endl;
-        cout << "     Name : " << ret.m_name << " Addr : " << \
-             ret.m_addr << " Phone : " << ret.m_phone << endl;
+        string host = ring.GetNode(to_string(p.m_id) + p.m_name);
+        CacheServer<int, Person> server = servers[host];
+        Person ret = server.Get(p.m_id); // read data
+
+        cout << "ID " << p.m_id << " stored on server " << host << endl;
+        cout << "  ID : " << p.m_id << " Name : " << ret.m_name << " Addr : " \
+             << ret.m_addr << " Phone : " << ret.m_phone << endl;
     }
 
     return 0;
