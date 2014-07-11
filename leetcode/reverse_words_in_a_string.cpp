@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -11,7 +11,6 @@ public:
     {
         int len = s.size();
         int i = 0, j = 0, k = 0;
-        vector<string> v;
         string ret;
 
         while (k < len) {
@@ -22,18 +21,29 @@ public:
             j = i + 1;
             while (j < len && s[j] != ' ') j++;
 
-            if (i < len) v.push_back(s.substr(i, j - i));
+            if (i < len) ret = s.substr(i, j - i) + ' ' + ret;
 
             k = j;
         }
 
-        while (!v.empty()) {
-            ret += v.back();
-            v.pop_back();
+        if (!ret.empty()) ret.erase(ret.size() - 1);
+        s = ret;
+    }
+};
 
-            if (!v.empty()) ret += ' ';
+class Solution2
+{
+public:
+    void reverseWords(string &s)
+    {
+        string ret, tmp;
+        istringstream is(s);
+
+        while (is >> tmp) {
+            ret = tmp + ' ' + ret;
         }
 
+        if (!ret.empty()) ret.erase(ret.size() - 1);
         s = ret;
     }
 };
