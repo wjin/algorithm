@@ -42,6 +42,8 @@ public:
 
     int removeDuplicates2(int A[], int n)
     {
+        if (n <= 1) // n = 0 or 1
+            return n;
         return distance(A, unique(A, A + n));
     }
 
