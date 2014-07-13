@@ -39,6 +39,12 @@ public:
 
         return i + 1;
     }
+
+    int removeDuplicates2(int A[], int n)
+    {
+        return distance(A, unique(A, A + n));
+    }
+
 };
 
 int main(int argc, char *argv[])
