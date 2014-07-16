@@ -76,6 +76,34 @@ public:
         }
         return -1;
     }
+
+    int search3(int A[], int n, int target)
+    {
+        int low = 0, high = n - 1;
+        int mid = 0;
+
+        while (low <= high) {
+            mid = low + ((high - low) >> 1);
+
+            if (A[mid] == target)
+                return mid;
+
+            if (A[low] <= A[mid]) {// first part is in order
+                if (A[low] <= target && target < A[mid]) { // target in first part
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            } else { // second part is in order
+                if (A[mid] < target && target <= A[high]) { // target in second part
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
 };
 
 int main(int argc, char *argv[])
@@ -94,6 +122,12 @@ int main(int argc, char *argv[])
     cout << sol.search2(a, sizeof(a) / sizeof(int), 0) << endl;
     cout << sol.search2(a, sizeof(a) / sizeof(int), 1) << endl;
     cout << sol.search2(a, sizeof(a) / sizeof(int), 3) << endl;
+
+    cout << sol.search3(a, sizeof(a) / sizeof(int), 4) << endl;
+    cout << sol.search3(a, sizeof(a) / sizeof(int), 7) << endl;
+    cout << sol.search3(a, sizeof(a) / sizeof(int), 0) << endl;
+    cout << sol.search3(a, sizeof(a) / sizeof(int), 1) << endl;
+    cout << sol.search3(a, sizeof(a) / sizeof(int), 3) << endl;
 
     return 0;
 }
