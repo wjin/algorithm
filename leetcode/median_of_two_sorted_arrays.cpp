@@ -19,6 +19,7 @@
 
 using namespace std;
 
+// O(log(m+n))
 class Solution
 {
 public:
@@ -37,13 +38,14 @@ public:
 
         // partition k numbers to two arrays
         // the small array has at most k/2 numbers
+		// pb >= pa
         int pa = min(k / 2, m);
         int pb = k - pa;
 
-        if (a[pa - 1] < b[pb - 1]) { // kth number is located in either a[pa...m-1] or b[0...n-1]
-            return findKth(a + pa, m - pa, b, n, k - pa);
-        } else if (a[pa - 1] > b[pb - 1]) { // kth number is located in either a[0...m-1] to b[pb...n-1]
-            return findKth(a, m, b + pb, n - pb, k - pb);
+        if (a[pa - 1] < b[pb - 1]) { // kth number is located in either a[pa...m-1] or b[0...pb-1]
+            return findKth(a + pa, m - pa, b, pb, k - pa);
+        } else if (a[pa - 1] > b[pb - 1]) { // kth number is located in either a[0...pa-1] to b[pb...n-1]
+            return findKth(a, pa, b + pb, n - pb, k - pb);
         } else {
             return a[pa - 1];
         }
@@ -56,7 +58,7 @@ public:
         }
 
         long long total = m + n; // m + n may overflow
-        if (total % 2 == 1) { // odd
+        if ((total & 0x1) == 1) { // odd
             return findKth(A, m, B, n, total / 2 + 1);
         } else { // even, get middle two numbers and calculate average
             return (findKth(A, m, B, n, total / 2)
