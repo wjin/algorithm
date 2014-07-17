@@ -98,13 +98,62 @@ public:
     }
 };
 
+// only scan array once
+// O(n), O(n)
+class Solution2
+{
+private:
+    int mergeLength(unordered_map<int, int> &m, int low, int high)
+    {
+        int lower = low - m[low] + 1;
+        int upper = high + m[high] - 1;
+
+        int newLen = upper - lower + 1;
+        m[lower] = newLen;
+        m[upper] = newLen;
+
+        return newLen;
+    }
+
+public:
+    int longestConsecutive(vector<int> &num)
+    {
+        if (num.empty()) return 0;
+
+        unordered_map<int, int> m;
+        int maxLen = 1;
+
+        for (auto e : num) {
+            // duplicate, already processed before
+            if (m.count(e) != 0 ) continue;
+
+            // deal with new elements
+            m[e] = 1;
+
+            // merge lower bound
+            if (m.count(e - 1) != 0) {
+                maxLen = max(maxLen, mergeLength(m, e - 1, e));
+            }
+
+            // merge upper bound
+            if (m.count(e + 1) != 0) {
+                maxLen = max(maxLen, mergeLength(m, e, e + 1));
+            }
+        }
+
+        return maxLen;
+    }
+};
+
 int main(int argc, char* argv[])
 {
     Solution sol;
+    Solution sol2;
     vector<int> num = { 100, 4, 200, 1, 3, 2 };
 
     cout << sol.longestConsecutive(num) << endl;
     cout << sol.longestConsecutive2(num) << endl;
+    cout << sol2.longestConsecutive(num) << endl;
 
     return 0;
 }
