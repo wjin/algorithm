@@ -36,6 +36,9 @@ public:
 
         sort(num.begin(), num.end());
         for (i = 0; i < len - 2; i++) {
+            // without this line, cannot pass new OJ system
+            if (i > 0 && num[i] == num[i - 1]) continue;
+
             int start = i + 1, end = len - 1;
             int sum = 0;
             // two pointers move toward each other. O(n)
@@ -62,7 +65,7 @@ void print_ret(vector<vector<int>> &v)
 {
     for (auto &row : v) {
         for (auto col : row)
-            cout << col << ends;
+            cout << col << ' ';
         cout << endl;
     }
 }
