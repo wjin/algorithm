@@ -46,6 +46,7 @@ using namespace std;
   Give a number(include digit 1...n), we can calculate its postion in permutation.
 
  */
+// O(n), O(n)
 class Solution
 {
 public:
@@ -86,13 +87,51 @@ public:
     }
 };
 
+// Find sequence's rank in permutation [1 ... n]
+// O(n^2), O(1)
+class Solution2
+{
+public:
+    long long factorial(int n)
+    {
+        long long product = 1;
+        for (int i = 2; i <= n; i++) {
+            product *= i;
+        }
+        return product;
+    }
+
+    int rank(vector<int> &v)
+    {
+        int rank = 0;
+        int n = v.size();
+
+        for (int i = 0; i < n; i++) {
+            int little = 0;
+            for (int j = i + 1; j < n; j++)
+                if (v[j] < v[i])
+                    little++;
+
+            rank += little * factorial(n - i - 1);
+        }
+
+        return rank + 1; // cantor starts counting from 0
+    }
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
+    Solution2 sol2;
 
     for (int i = 1; i <= 6; i++) {
         cout << sol.getPermutation(3, i) << endl;
     }
+
+    vector<int> v = { 1, 2, 3 };
+    do {
+        cout << sol2.rank(v) << endl;
+    } while (next_permutation(v.begin(), v.end()));
 
     return 0;
 }
