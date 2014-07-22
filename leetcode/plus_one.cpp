@@ -1,3 +1,13 @@
+/*
+
+ Plus One
+
+ Given a non-negative number represented as an array of digits, plus one to the number.
+
+ The digits are stored such that the most significant digit is at the head of the list.
+
+*/
+
 #include <iostream>
 #include <vector>
 
@@ -14,17 +24,17 @@ public:
         }
 
         int n = digits.size() - 1;
-        int addition = 1;
-        int carry = 0;
+        int carry = 1;
         int sum = 0;
 
         do {
-            sum = digits[n] + carry + addition;
-            digits[n] = sum >= 10 ? (sum - 10) : sum;
-            carry = sum >= 10 ? 1 : 0;
+            sum = digits[n] + carry;
+            digits[n] = sum % 10;
+            carry = sum / 10;
+            // digits[n] = sum >= 10 ? (sum - 10) : sum;
+            // carry = sum >= 10 ? 1 : 0;
 
             n--;
-            addition = 0;
         } while (carry && n >= 0);
 
         if (carry)
