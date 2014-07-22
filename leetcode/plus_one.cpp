@@ -18,24 +18,18 @@ class Solution
 public:
     vector<int> plusOne(vector<int> &digits)
     {
-        if (digits.empty()) { // empty vector
-            digits.push_back(1);
-            return digits;
-        }
-
         int n = digits.size() - 1;
         int carry = 1;
         int sum = 0;
 
-        do {
+        while (n >= 0 && carry) {
             sum = digits[n] + carry;
             digits[n] = sum % 10;
             carry = sum / 10;
+            n--;
             // digits[n] = sum >= 10 ? (sum - 10) : sum;
             // carry = sum >= 10 ? 1 : 0;
-
-            n--;
-        } while (carry && n >= 0);
+        }
 
         if (carry)
             digits.insert(digits.begin(), 1);
