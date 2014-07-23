@@ -52,39 +52,32 @@ public:
 class Solution2
 {
 public:
-    int divideAndConquer(int A[], int i, int j)
+    int divideAndConquer(int A[], int l, int h)
     {
-        if (i == j)
-            return A[i];
-        else if (i == j - 1)
-            return max( { A[i], A[j], A[i] + A[j] }); // do not forget A[i] + A[j]
+        if (l > h)
+            return 0;
+        else if (l == h)
+            return A[l];
         else {
-            int mid = i + (j - i) / 2;
-            int lMax = divideAndConquer(A, i, mid - 1);  // left max
-            int rMax = divideAndConquer(A, mid + 1, j); // right max
+            int mid = l + ((h - l) >> 1);
 
             int leftSum = 0;
             int leftMax = INT_MIN;
-            for (int k = mid - 1; k >= i; k--) {
+            for (int k = mid; k >= l; k--) {
                 leftSum += A[k];
                 leftMax = max(leftMax, leftSum);
             }
 
             int rightSum = 0;
             int rightMax = INT_MIN;
-            for (int k = mid + 1; k <= j; k++) {
+            for (int k = mid + 1; k <= h; k++) {
                 rightSum += A[k];
                 rightMax = max(rightMax, rightSum);
             }
 
-            // leftMax and rightMax may be both little than 0
-            // or just one of them is little than 0
-            // we should not accumulate negative number to max
-            int mMax = A[mid]; // middle max, at least include the middle element
-            mMax += leftMax > 0 ? leftMax : 0;
-            mMax += rightMax > 0 ? rightMax : 0;
-
-            return max( { lMax, rMax, mMax });
+            int lMax = divideAndConquer(A, l, mid);
+            int rMax = divideAndConquer(A, mid + 1, h);
+            return max( { lMax, rMax, leftMax + rightMax });
         }
     }
 
