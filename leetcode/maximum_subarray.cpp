@@ -42,6 +42,19 @@ public:
 
         return max_sum;
     }
+
+    int maxSubArray2(int A[], int n)
+    {
+        int max_sum = INT_MIN;
+        int sum = 0;
+
+        for (int i = 0; i < n; i++) {
+            sum = max(A[i], sum + A[i]);
+            max_sum = max(sum, max_sum);
+        }
+
+        return max_sum;
+    }
 };
 
 // divide and conquer
