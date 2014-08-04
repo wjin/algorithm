@@ -56,10 +56,11 @@ private:
         int left; // segment's left point
         int right; // segment's right point
 
-        // here we can recode anything correponding to specific problem
+        // here we can record anything specific to a problem
         // i.e.: sum, max or min element, and so on
-        int minEle; // max element in the scope[left...right]
-        int maxEle; // min element in the scope[left...right]
+        int minEle; // min element in the scope[left...right]
+        int maxEle; // max element in the scope[left...right]
+
         TreeNode(const int l = 0, const int r = 0):
             lChild(nullptr), rChild(nullptr), left(l), right(r), minEle(0), maxEle(0) {}
     };
