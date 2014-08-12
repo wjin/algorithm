@@ -1,6 +1,6 @@
 /*
 
-   stack with min element O(1)
+ 3.2 stack with min element O(1)
 
 */
 

@@ -1,3 +1,9 @@
+/*
+
+ 3.5 Implement a MyQueue class which implements a queue using two stacks.
+
+ */
+
 #include <iostream>
 #include <stack>
 #include <queue>
