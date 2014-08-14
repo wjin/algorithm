@@ -40,6 +40,41 @@ public:
     }
 };
 
+class Solution2
+{
+public:
+    void rotate(vector<vector<int>> &matrix)
+    {
+        int len = matrix.size();
+        if (len <= 1) return;
+
+        // swap element layer by layer (circle by circle)
+        // from outside to inside
+        for (int layer = 0; layer < len / 2; layer++) {
+            int first = layer, last = len - 1 - layer;
+
+            // traverse row
+            for (int i = first; i < last; i++) {
+                int offset = i - first; // offset to the start
+
+                int top = matrix[first][i]; // store top element
+
+                // left to top
+                matrix[first][i] = matrix[last - offset][first];
+
+                // bottom to left
+                matrix[last - offset][first] = matrix[last][last - offset];
+
+                // right to bottom
+                matrix[last][last - offset] = matrix[i][last];
+
+                // top to right
+                matrix[i][last] = top;
+            }
+        }
+    }
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
