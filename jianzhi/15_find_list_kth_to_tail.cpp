@@ -17,21 +17,17 @@ struct ListNode {
 class Solution
 {
 public:
-    int findKthToTail(ListNode *list, size_t k)
+    int findKthToTail(ListNode *list, int k)
     {
         if (!list || k <= 0) return -1;
 
-        ListNode dummy(-11);
-        dummy.next = list;
-        ListNode *p = &dummy, *q = &dummy;
+        ListNode *p = list, *q = list;
 
-        while (k && q) {
+        while (q && k--) { // do not swap q and k-- order
             q = q->next;
-            k--;
         }
 
-        // don't use k == 0
-        if (!q) return -1; // k > list length
+        if (k > 0) return -2;
 
         while (q) {
             q = q->next;
@@ -42,16 +38,16 @@ public:
     }
 
     // recursive solutioin
-    int find(ListNode *list, size_t k,int &ret)
+    void find(ListNode *l, int &k, int &ret)
     {
-        if (!list) return 0;
+        if (!l) return;
 
-        size_t t = find(list->next, k, ret) + 1;
-        if (t == k) ret = list->val;
-        return t;
+        find(l->next, k, ret);
+        --k;
+        if (k == 0) ret = l->val;
     }
 
-    int findKthToTail2(ListNode *list, size_t k)
+    int findKthToTail2(ListNode *list, int k)
     {
         int ret = -1;
 
@@ -59,6 +55,7 @@ public:
 
         find(list, k, ret);
 
+        if (k > 0) ret = -2;
         return ret;
     }
 };
