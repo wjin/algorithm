@@ -78,6 +78,42 @@ public:
     }
 };
 
+
+// recursive
+// TLE
+class Solution2
+{
+public:
+    bool isMatch(const char *s, const char *p)
+    {
+
+        if (s == nullptr && p == nullptr)
+            return true;
+        if (s == nullptr || p == nullptr)
+            return false;
+
+        if (*p == 0) { // empty string
+            return *s == 0;
+        }
+
+        if (*p == '?' || *p == *s) return isMatch(s + 1, p + 1);
+
+        if (*p == '*') {
+            // check star
+            while (*s) {
+                if (isMatch(s, p + 1)) return true;
+                s++;
+            }
+
+            // ending with serial of stars
+            while (*p && *p == '*') p++;
+            return *p == 0;
+        }
+
+        return false;
+    }
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
@@ -89,6 +125,7 @@ int main(int argc, char *argv[])
     cout << sol.isMatch("aa", "a*") << endl;
     cout << sol.isMatch("ab", "?*") << endl;
     cout << sol.isMatch("aab", "c*a*b") << endl;
+    cout << sol.isMatch("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b") << endl;
 
     return 0;
 }
