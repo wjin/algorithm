@@ -16,33 +16,28 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
 class Solution
 {
 public:
-    string getNext(string &s)
+    string getNext(const string &s)
     {
-        string ret;
-        int cnt = 1;
+        stringstream ss;
+        int len = s.size();
+        int i, j;
 
-        int i;
-        for (i = 1; i < s.size(); i++) {
-            if (s[i] == s[i - 1]) // count duplicate numbers
-                cnt++;
-            else { //
-                ret += cnt + '0'; // count
-                ret += s[i - 1]; // number
-                cnt = 1; // reset count
-            }
+        for (i = 0; i < len; ) {
+            j = i + 1;
+            while (j < len && s[i] == s[j]) j++;
+
+            ss << j - i << s[i];
+            i = j;
         }
 
-        // the last one
-        ret += cnt + '0';
-        ret += s[i - 1];
-
-        return ret;
+        return ss.str();
     }
 
     string countAndSay(int n)
@@ -51,8 +46,6 @@ public:
             return "";
 
         string ret("1");
-        if (n == 1)
-            return ret;
 
         for (int i = 1; i < n; i++) {
             ret = getNext(ret);
