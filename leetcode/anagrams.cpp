@@ -13,6 +13,7 @@
 #include <string>
 #include <algorithm>
 #include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
 
@@ -42,6 +43,39 @@ public:
                 ret.push_back(strs[i]);
         }
 
+        return ret;
+    }
+};
+
+class Solution2
+{
+public:
+    vector<string> anagrams(vector<string> &strs)
+    {
+        vector<string> ret;
+
+        if (strs.empty())
+            return ret;
+
+        unordered_map<string, string> m;
+        unordered_set<string> added;
+
+        for (auto str : strs) {
+            string t(str);
+            sort(t.begin(), t.end());
+
+            if (!m.count(t)) {
+                m[t] = str;
+            } else {
+                ret.push_back(str); // add str
+
+                // add previous one
+                if (!added.count(m[t])) {
+                    added.insert(m[t]);
+                    ret.push_back(m[t]);
+                }
+            }
+        }
         return ret;
     }
 };
