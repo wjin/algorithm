@@ -22,7 +22,6 @@ using namespace std;
 
 class Solution
 {
-public:
     string getNext(const string &s)
     {
         stringstream ss;
@@ -40,6 +39,7 @@ public:
         return ss.str();
     }
 
+public:
     string countAndSay(int n)
     {
         if (n <= 0)
