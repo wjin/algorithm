@@ -43,20 +43,15 @@ public:
         TreeNode *cur = root;
         vector<vector<int>> ret;
 
-        if (cur == nullptr)
-            return ret;
-        else
-            q.push(cur);
+        if (cur) q.push(cur);
 
         int levelSize = 0;
-        int level = -1;
         bool left = false;
 
         while (!q.empty()) {
             // judge whether start a new level
             if (levelSize == 0) {
                 levelSize = q.size();
-                level++;
                 ret.push_back(vector<int>()); //
                 left = !left;
             }
@@ -67,9 +62,9 @@ public:
 
             // add element for this level
             if (left) {
-                ret[level].push_back(cur->val);
+                ret.back().push_back(cur->val);
             } else {
-                ret[level].insert(ret[level].begin(), cur->val);
+                ret.back().insert(ret.back().begin(), cur->val);
             }
 
             if (cur->left != nullptr)
@@ -89,7 +84,7 @@ public:
     vector<vector<int> > zigzagLevelOrder(TreeNode *root)
     {
         vector<vector<int>> ret;
-        levelOrder(root, ret, 1, true);
+        levelOrder(root, ret, 0, true);
         return ret;
     }
 
@@ -98,13 +93,13 @@ private:
     {
         if (!t) return;
 
-        if (level > ret.size()) ret.push_back(vector<int>());
+        if (level >= ret.size()) ret.push_back(vector<int>());
 
         // add element according to left
         if (left) {
-            ret[level - 1].push_back(t->val);
+            ret[level].push_back(t->val);
         } else {
-            ret[level - 1].insert(ret[level - 1].begin(), t->val);
+            ret[level].insert(ret[level].begin(), t->val);
         }
 
         levelOrder(t->left, ret, level + 1, !left); // invert left
@@ -116,7 +111,7 @@ void print_ret(vector<vector<int>> &ret)
 {
     for (auto &row : ret) {
         for (auto col : row)
-            cout << col << ends;
+            cout << col << ' ';
         cout << endl;
     }
 }
