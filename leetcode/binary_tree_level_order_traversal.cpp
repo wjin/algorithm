@@ -47,20 +47,14 @@ public:
         queue<TreeNode*> q;
         TreeNode *cur = root;
         vector<vector<int>> ret;
-
-        if (cur == nullptr)
-            return ret;
-        else
-            q.push(cur);
-
         int levelSize = 0;
-        int sub = -1;
+
+        if (cur) q.push(cur);
 
         while (!q.empty()) {
             // judge whether start a new level
             if (levelSize == 0) {
                 levelSize = q.size();
-                sub++;
                 ret.push_back(vector<int>()); //
             }
 
@@ -68,7 +62,7 @@ public:
             q.pop();
 
             // add element for this level
-            ret[sub].push_back(cur->val);
+            ret.back().push_back(cur->val);
             levelSize--;
 
             if (cur->left != nullptr)
@@ -88,7 +82,7 @@ public:
     vector<vector<int>> levelOrder(TreeNode *root)
     {
         vector<vector<int>> ret;
-        levelOrder(root, ret, 1);
+        levelOrder(root, ret, 0);
         return ret;
     }
 
@@ -97,9 +91,9 @@ private:
     {
         if (!t) return;
 
-        if (level > ret.size()) ret.push_back(vector<int>());
+        if (level >= ret.size()) ret.push_back(vector<int>());
 
-        ret[level - 1].push_back(t->val);
+        ret[level].push_back(t->val);
         levelOrder(t->left, ret, level + 1);
         levelOrder(t->right, ret, level + 1);
     }
@@ -109,7 +103,7 @@ void print_ret(vector<vector<int>> &ret)
 {
     for (auto &row : ret) {
         for (auto col : row)
-            cout << col << ends;
+            cout << col << ' ';
         cout << endl;
     }
 }
