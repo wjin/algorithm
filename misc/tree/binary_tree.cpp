@@ -216,6 +216,33 @@ public:
         }
     }
 
+    void PostOrderMorris()
+    {
+        BiTreeNode<T> dummy(-1);
+        dummy.left = root;
+        BiTreeNode<T> *cur = &dummy, *p = nullptr; // cur's left
+
+        while (cur) {
+            if (cur->left == nullptr) {
+                cur = cur->right;
+            } else {
+                // find sucessor for the cur's left child's rightmost node
+                p = cur->left; // cur's left
+                while (p->right && p->right != cur) p = p->right; // rightmost
+
+                if (!p->right) { // not threaded
+                    p->right = cur; // thread it
+                    cur = cur->left; // forward to left
+                } else { // node has already been threaded
+                    // hadle current node
+                    handle_data(cur->left, p);
+                    p->right = nullptr; // delete it
+                    cur = cur->right; // forward to right child
+                }
+            }
+        }
+    }
+
     void LevelOrder()
     {
         queue<BiTreeNode<T>*> q;
@@ -325,6 +352,27 @@ private:
     void handle_data(BiTreeNode<T> *t)
     {
         cout << t->m_data << "-->";
+    }
+
+    void handle_data(BiTreeNode<T> *from, BiTreeNode<T> *to)
+    {
+        // just for morris post order traverse
+
+        // we need to access node reversely here
+        // recursion here requires O(n) space complexity in worst case
+
+        // normally, we can take it as a single linked list:
+        // from->right->right->....->to
+        // reverse list and then access it, after that, reverse it back
+        // so that we can guarantee a O(1) space complexity
+
+        if (from == to) {
+            cout << from->m_data << "-->";
+            return;
+        }
+
+        handle_data(from->right, to);
+        cout << from->m_data << "-->";
     }
 
     void do_PreOrder(BiTreeNode<T> *t)    // recursive pre-order traverse tree
@@ -473,6 +521,10 @@ int main()
 
     cout << "PostOrderUnRec: ";
     t.PostOrderUnRec();
+    cout << endl;
+
+    cout << "PostOrderMorris: ";
+    t.PostOrderMorris();
     cout << endl;
 
     cout << "LevelOrder: ";
