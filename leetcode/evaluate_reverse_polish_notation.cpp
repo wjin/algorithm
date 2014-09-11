@@ -21,68 +21,39 @@ using namespace std;
 
 class Solution
 {
+private:
+    int cal(const string &s, int n1, int n2)
+    {
+        if (s == "+") return n1 + n2;
+        else if (s == "-") return n1 - n2;
+        else if (s == "*") return n1 * n2;
+        else return n1 / n2;
+    }
+
+    bool isOperator(const string &s)
+    {
+        return s.size() == 1 && (string("+-*/").find(s) != string::npos);
+    }
+
 public:
-    int cal(string &s, int n1, int n2)
-    {
-        char ch = s[0];
-        switch (ch) {
-        case '+':
-            return n1 + n2;
-        case '-':
-            return n1 - n2;
-        case '*':
-            return n1 * n2;
-        case '/':
-            return n1 / n2;
-        default:
-            return -1; // invalid arithmetic
-        };
-    }
-
-    bool isNum(string &s, int &ret)
-    {
-        // consider s is not empty and valid here
-        // do not consider overflow
-
-        if (s == "+" || s == "-" || s == "*" || s == "/") return false;
-
-        // may not need
-        int sign = 1;
-        size_t i = 0;
-        if (s[0] == '+') i++;
-        if (s[0] == '-') {
-            i++;
-            sign = -1;
-        }
-
-        // could use stoi to convert string to integer
-        ret = 0;
-        while (i < s.size()) {
-            ret = ret * 10 +  s[i] - '0';
-            i++;
-        }
-
-        ret *= sign;
-
-        return true;
-    }
-
     int evalRPN(vector<string> &tokens)
     {
-        vector<int> num;
+        vector<int> v;
+        int first, second;
 
-        int ret = 0;
         for (auto e : tokens) {
-            if (isNum(e, ret)) num.push_back(ret);
-            else {
-                int n2 = num.back();
-                num.pop_back();
-                int n1 = num.back();
-                num.pop_back();
-                num.push_back(cal(e, n1, n2));
+            if (!isOperator(e)) {
+                v.push_back(stoi(e));
+            } else {
+                second = v.back();
+                v.pop_back();
+                first = v.back();
+                v.pop_back();
+
+                v.push_back(cal(e, first, second));
             }
         }
-        return num[0];
+        return v[0];
     }
 };
 
