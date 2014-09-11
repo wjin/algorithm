@@ -142,11 +142,36 @@ public:
     }
 };
 
+// O(n) space complexity due to implicit stack
+// only work for perfect binary tree
+class Solution3
+{
+private:
+    void connect(TreeLinkNode *t, TreeLinkNode *sibling)
+    {
+        if (!t) return;
+
+        t->next = sibling;
+        connect(t->left, t->right);
+
+        if (sibling)
+            connect(t->right, sibling->left);
+        else
+            connect(t->right, nullptr);
+    }
+
+public:
+    void connect(TreeLinkNode *root)
+    {
+        connect(root, NULL);
+    }
+};
+
 void print_tree_next_value(TreeLinkNode *root)
 {
     if (root) {
         if (root->next) {
-            cout << root->val << ends << root->next->val << endl;
+            cout << root->val << ' ' << root->next->val << endl;
         }
         print_tree_next_value(root->left);
         print_tree_next_value(root->right);
