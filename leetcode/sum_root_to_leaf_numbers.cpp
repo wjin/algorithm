@@ -44,54 +44,44 @@ struct TreeNode {
 // post unrecursive traverse
 class Solution
 {
-private:
-    int sum;
 public:
-    void calSum(vector<TreeNode*> &v)
+    int sumNumbers(TreeNode *root)
     {
-        int t = 0;
-        for (auto e : v)
-            t = t * 10 + e->val;
-        sum += t;
-    }
+        if (!root) return 0;
 
-    int getSum(TreeNode *t)
-    {
         vector<TreeNode*> v;
-        TreeNode *p = t;
+        TreeNode *cur = root;
         TreeNode *prev = nullptr;
-        sum = 0;
+        int sum = 0, tsum = 0;
 
         // post order un-recursive traverse tree
-        // when encounter a leaf, path was stored in vector array
-        while (p || !v.empty()) {
-            if (p) {
-                v.push_back(p);
-                p = p->left;
+        while (cur || !v.empty()) {
+            if (cur) {
+                v.push_back(cur);
+                tsum = tsum * 10 + cur->val;
+                cur = cur->left;
             } else {
-                p = v.back();
-                if (p->right && p->right != prev) {
-                    p = p->right;
-                    v.push_back(p);
-                    p = p->left;
+                cur = v.back();
+
+                if (cur->right && cur->right != prev) {
+                    cur = cur->right;
+                    v.push_back(cur);
+                    tsum = tsum * 10 + cur->val;
+                    cur = cur->left;
                 } else {
-                    if (!p->left && !p->right)
-                        calSum(v); // leaf, accumulate path to sum
                     v.pop_back();
-                    prev = p;
-                    p = nullptr;
+                    if (!cur->left && !cur->right) {
+                        sum += tsum; // leaf, accumulate tsum to sum
+                    }
+                    tsum /= 10;
+
+                    prev = cur;
+                    cur = nullptr;
                 }
             }
         }
 
         return sum;
-    }
-
-    int sumNumbers(TreeNode *root)
-    {
-        if (root == nullptr)
-            return 0;
-        return getSum(root);
     }
 };
 
