@@ -74,13 +74,42 @@ public:
             if (cur->left) q.push(cur->left);
             if (cur->right) q.push(cur->right);
         }
+        return level;
     }
+};
+
+// recursively
+class Solution3
+{
+private:
+    void minDepth(TreeNode *t, int level, int &depth)
+    {
+        if (t) {
+            if (!t->left && !t->right) {
+                depth = min(depth, level);
+            }
+            minDepth(t->left, level + 1, depth);
+            minDepth(t->right, level + 1, depth);
+        }
+    }
+
+public:
+    int minDepth(TreeNode *root)
+    {
+        if (!root) return 0;
+
+        int depth = INT_MAX;
+        minDepth(root, 1, depth);
+        return depth;
+    }
+
 };
 
 int main(int argc, char *argv[])
 {
     Solution sol;
     Solution2 sol2;
+    Solution3 sol3;
 
     TreeNode *root = new TreeNode(3);
     root->left = new TreeNode(9);
@@ -96,6 +125,9 @@ int main(int argc, char *argv[])
 
     cout << sol2.minDepth(root) << endl;
     cout << sol2.minDepth(root2) << endl;
+
+    cout << sol3.minDepth(root) << endl;
+    cout << sol3.minDepth(root2) << endl;
 
     return 0;
 }
