@@ -235,7 +235,7 @@ public:
                     cur = cur->left; // forward to left
                 } else { // node has already been threaded
                     // hadle current node
-                    handle_data(cur->left, p);
+                    handle_data_reversely(cur->left, p);
                     p->right = nullptr; // delete it
                     cur = cur->right; // forward to right child
                 }
@@ -354,7 +354,7 @@ private:
         cout << t->m_data << "-->";
     }
 
-    void handle_data(BiTreeNode<T> *from, BiTreeNode<T> *to)
+    void handle_data_reversely(BiTreeNode<T> *from, BiTreeNode<T> *to)
     {
         // just for morris post order traverse
 
@@ -367,12 +367,12 @@ private:
         // so that we can guarantee a O(1) space complexity
 
         if (from == to) {
-            cout << from->m_data << "-->";
+            handle_data(from);
             return;
         }
 
-        handle_data(from->right, to);
-        cout << from->m_data << "-->";
+        handle_data_reversely(from->right, to);
+        handle_data(from);
     }
 
     void do_PreOrder(BiTreeNode<T> *t)    // recursive pre-order traverse tree
