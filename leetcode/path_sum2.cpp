@@ -44,40 +44,41 @@ struct TreeNode {
 class Solution
 {
 public:
-    void getPathWhenEqual(vector<TreeNode *> &v, vector<vector<int>> &ret, const int sum)
-    {
-        vector<int> tmp;
-        for (auto e : v)
-            tmp.push_back(e->val);
-
-        if (accumulate(tmp.begin(), tmp.end(), 0) == sum)
-            ret.push_back(tmp);
-    }
-
     vector<vector<int>> pathSum(TreeNode *root, int sum)
     {
         vector<vector<int>> ret;
+        vector<int> path;
         vector<TreeNode*> v;
         TreeNode *cur = root, *prev = nullptr;
+        int tsum = 0;
 
         // postorder traverse tree
         while (cur || !v.empty()) {
             if (cur) {
                 v.push_back(cur);
+                path.push_back(cur->val);
+                tsum += cur->val;
+
                 cur = cur->left;
             } else {
                 cur = v.back();
 
                 if (cur->right && cur->right != prev) {
                     cur = cur->right;
+
                     v.push_back(cur);
+                    path.push_back(cur->val);
+                    tsum += cur->val;
+
                     cur = cur->left;
                 } else {
-                    if (!cur->left && !cur->right) {
-                        getPathWhenEqual(v, ret, sum);
-                    }
-
                     v.pop_back();
+                    if (tsum == sum && !cur->left && !cur->right) {
+                        ret.push_back(path);
+                    }
+                    path.pop_back();
+                    tsum -= cur->val;
+
                     prev = cur;
                     cur = nullptr;
                 }
@@ -122,7 +123,7 @@ void print_ret(vector<vector<int>> &ret)
 {
     for (auto &row : ret) {
         for (auto col : row)
-            cout << col << ends;
+            cout << col << ' ';
         cout << endl;
     }
 }
