@@ -38,26 +38,24 @@ class Solution
 public:
     int getPathSum(TreeNode *root, int &curSum)
     {
-        if (root == nullptr)
-            return 0;
-        else {
-            int lMax = getPathSum(root->left, curSum);
-            int rMax = getPathSum(root->right, curSum);
+        if (!root) return 0;
 
-            // calculate current max sum
-            // 4 cases
-            int tmpMax = root->val;
-            if (lMax > 0) // >
-                tmpMax += lMax;
-            if (rMax > 0)
-                tmpMax += rMax;
+        int lMax = getPathSum(root->left, curSum);
+        int rMax = getPathSum(root->right, curSum);
 
-            curSum = max(curSum, tmpMax);
+        // sum cross this node
+        int tSum = root->val;
+        if (lMax > 0) // >
+            tSum += lMax;
+        if (rMax > 0)
+            tSum += rMax;
 
-            // return max path sum ending with root
-            // so that we can combine it with other paths
-            return max(root->val, max(lMax + root->val, rMax + root->val)); // be careful
-        }
+        curSum = max(curSum, tSum);
+
+        // return max path sum ending with root
+        // so that we can combine it with other paths
+        // only one direction (left or right) is returned
+        return max({root->val, lMax + root->val, rMax + root->val}); // be careful
     }
 
     int maxPathSum(TreeNode *root)
