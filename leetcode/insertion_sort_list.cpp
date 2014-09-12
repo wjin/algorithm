@@ -23,37 +23,28 @@ class Solution
 public:
     ListNode *insertionSortList(ListNode *head)
     {
-        if (head == nullptr)
-            return head;
+        ListNode dummy(-1);
+        ListNode *prev = &dummy, *cur = head, *next = nullptr;
 
-        ListNode dumbNode(-1);
-        dumbNode.next = head;
-        ListNode *prev = &dumbNode, *cur = prev->next;
-        ListNode *p = cur->next, *q = nullptr;
-
-        cur->next = nullptr; // split list
-        while (p) {
+        while (cur) {
             // store next node
-            q = p->next;
+            next = cur->next;
 
-            // find position to insert p
-            while (cur && cur->val < p->val) {
-                prev = cur;
-                cur = cur->next;
+            // find insert position
+            while (prev->next && prev->next->val < cur->val) {
+                prev = prev->next;
             }
 
-            // insert p between prev and cur
-            p->next = cur;
-            prev->next = p;
+            // insert cur
+            cur->next = prev->next;
+            prev->next = cur;
 
-            // restore p to next node
-            // set prev and cur to initial value
-            p = q;
-            prev = &dumbNode;
-            cur = prev->next; // prev->next, not head, because we may insert node before head
+            // update
+            cur = next;
+            prev = &dummy;
         }
 
-        return dumbNode.next;
+        return dummy.next;
     }
 };
 
