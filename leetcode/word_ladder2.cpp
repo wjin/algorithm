@@ -101,27 +101,19 @@ public:
     }
 };
 
-// BFS
-// TLE in the beginning, optimize push queue opreation
-// Actually, I pushed duplicate words into the queue
-//
-// unordered_map<string, unordered_set<string>> &father can be unordered_multimap<string, string>
-// gcc 4.8 ran into build error when use equal_range... (fix build error by upgrading gcc to 4.8.2)
-//
+// BFS, can pass OJ
 class Solution2
 {
 public:
     void getPath(string &start, string &end, unordered_set<string> &dict,
-                 unordered_multimap<string, string> &father, vector<vector<string>> &ret, vector<string> &path)
+                 unordered_map<string, vector<string>> &father, vector<vector<string>> &ret, vector<string> &path)
     {
         path.push_back(start);
         if (start == end) {
             ret.push_back(vector<string>(path.rbegin(), path.rend()));
         } else {
-            auto range = father.equal_range(start);
-            for (auto ite = range.first; ite != range.second; ++ite) {
-                getPath(ite->second, end, dict, father, ret, path);
-            }
+            for (auto e : father[start] )
+                getPath(e, end, dict, father, ret, path);
         }
         path.pop_back();
     }
@@ -134,7 +126,7 @@ public:
 
         unordered_set<string> used; // avoid duplicate word in the path
         unordered_set<string> levelUsed; // delete the same level duplicate words using set
-        unordered_multimap<string, string> father; // use it to get path
+        unordered_map<string, vector<string>> father; // use it to get path
 
         queue<string> q;
         q.push(start);
@@ -154,7 +146,7 @@ public:
                     t[i] = c;
                     if (t == end) { // find it
                         found = true;
-                        father.insert(make_pair(t, cur));
+                        father[t].push_back(cur);
                         break;
                     }
 
@@ -164,7 +156,7 @@ public:
                         // just push levelUsed element
                         // q.push(t); // don't push it to queue, it will push many nonused elements
                         levelUsed.insert(t);
-                        father.insert(make_pair(t, cur));
+                        father[t].push_back(cur);
                     }
                 }
                 t[i] = cur[i]; // reset t to cur
