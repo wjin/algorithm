@@ -96,6 +96,26 @@ public:
 
         return -1;
     }
+
+    int jump4(int A[], int n)
+    {
+        if (n <= 1) return 0;
+
+        int farest = 0, lastFarest = 0, step = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (i > lastFarest) {
+                step++;
+                lastFarest = farest;
+            }
+
+            if (farest < i) return -1; // cannot reach to end
+
+            farest = max(farest, A[i] + i);
+        }
+
+        return step;
+    }
 };
 
 int main(int argc, char *argv[])
@@ -125,6 +145,12 @@ int main(int argc, char *argv[])
     cout << sol.jump3(a3, sizeof(a3) / sizeof(int)) << endl;
     cout << sol.jump3(a4, sizeof(a4) / sizeof(int)) << endl;
     cout << sol.jump3(a5, sizeof(a5) / sizeof(int)) << endl;
+
+    cout << sol.jump4(a1, sizeof(a1) / sizeof(int)) << endl;
+    cout << sol.jump4(a2, sizeof(a2) / sizeof(int)) << endl;
+    cout << sol.jump4(a3, sizeof(a3) / sizeof(int)) << endl;
+    cout << sol.jump4(a4, sizeof(a4) / sizeof(int)) << endl;
+    cout << sol.jump4(a5, sizeof(a5) / sizeof(int)) << endl;
 
     return 0;
 }

@@ -69,6 +69,16 @@ public:
 
         return i == n || farest >= n;
     }
+
+    bool canJump4(int A[], int n)
+    {
+        int farest = 0;
+        for (int i = 0; i < n; i++) {
+            if (farest >= n - 1) return true;
+            if (farest < i) return false;
+            farest = max(A[i] + i, farest);
+        }
+    }
 };
 
 int main(int argc, char *argv[])
@@ -98,6 +108,12 @@ int main(int argc, char *argv[])
     cout << sol.canJump3(a3, sizeof(a3) / sizeof(int)) << endl;
     cout << sol.canJump3(a4, sizeof(a4) / sizeof(int)) << endl;
     cout << sol.canJump3(a5, sizeof(a5) / sizeof(int)) << endl;
+
+    cout << sol.canJump4(a1, sizeof(a1) / sizeof(int)) << endl;
+    cout << sol.canJump4(a2, sizeof(a2) / sizeof(int)) << endl;
+    cout << sol.canJump4(a3, sizeof(a3) / sizeof(int)) << endl;
+    cout << sol.canJump4(a4, sizeof(a4) / sizeof(int)) << endl;
+    cout << sol.canJump4(a5, sizeof(a5) / sizeof(int)) << endl;
 
     return 0;
 
