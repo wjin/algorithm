@@ -46,6 +46,30 @@ public:
     }
 };
 
+class Solution2
+{
+public:
+    vector<vector<int> > generate(int numRows)
+    {
+        vector<vector<int> > ret;
+        if (numRows <= 0) return ret;
+
+        ret.push_back(vector<int>(1, 1));
+        for (int i = 1; i < numRows; i++) {
+            ret.push_back(vector<int>(i + 1, 0));
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    ret[i][j] = 1;
+                } else {
+                    ret[i][j] = ret[i - 1][j - 1] + ret[i - 1][j];
+                }
+            }
+        }
+
+        return ret;
+    }
+};
+
 void print(vector<vector<int>> v)
 {
     for (auto &row : v) {
@@ -58,8 +82,10 @@ void print(vector<vector<int>> v)
 int main(int argc, char *argv[])
 {
     Solution sol;
+    Solution2 sol2;
 
     print(sol.generate(5));
+    print(sol2.generate(5));
 
     return 0;
 }

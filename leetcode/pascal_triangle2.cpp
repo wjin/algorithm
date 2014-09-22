@@ -27,10 +27,8 @@ public:
         ret[0] = 1;
         for (int i = 1; i <= rowIndex; i++) {
             for (int j = i; j >= 0; j--) { // back to front
-                if (j == 0)
-                    continue;
-                else if (j == i)
-                    ret[j] = ret[j - 1];
+                if (j == 0 || j == i)
+                    ret[j] = 1;
                 else
                     ret[j] = ret[j - 1] + ret[j];
             }
@@ -47,7 +45,8 @@ int main(int argc, char *argv[])
     vector<int> ret = sol.getRow(3);
 
     for (auto t : ret)
-        cout << t << ends;
+        cout << t << ' ';
+    cout << endl;
 
     return 0;
 }
