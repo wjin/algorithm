@@ -55,12 +55,14 @@ public:
             t /= 10;
         }
 
-        if (ret > INT_MAX) {
+        if (minus) ret = -ret;
+
+        if (ret > INT_MAX || ret < INT_MIN) {
             invalid = true;
             return 0;
-        } else {
-            return minus ? -ret : ret;
         }
+
+        return ret;
     }
 };
 

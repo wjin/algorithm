@@ -37,17 +37,29 @@ public:
             return false;
 
         int n = 0;
-        int t = 0;
         while (x > n) {
-            t = x % 10;
+            n = n * 10 + x % 10;
             x /= 10;
-            n = n * 10 + t;
         }
 
         if (x == n || x == (n / 10))
             return true;
         else
             return false;
+    }
+
+    bool isPalindrome2(int x)
+    {
+        string s(to_string(x));
+
+        int start = 0, end = s.size() - 1;
+        while (start < end) {
+            if (s[start] != s[end]) return false;
+            start++;
+            end--;
+        }
+
+        return true;
     }
 };
 
@@ -61,8 +73,15 @@ int main(int argc, char *argv[])
     cout << sol.isPalindrome(121) << endl;
     cout << sol.isPalindrome(1221) << endl;
     cout << sol.isPalindrome(123421) << endl;
-
     cout << sol.isPalindrome(10) << endl; // bug
+
+    cout << sol.isPalindrome2(-1) << endl;
+    cout << sol.isPalindrome2(1) << endl;
+    cout << sol.isPalindrome2(11) << endl;
+    cout << sol.isPalindrome2(121) << endl;
+    cout << sol.isPalindrome2(1221) << endl;
+    cout << sol.isPalindrome2(123421) << endl;
+    cout << sol.isPalindrome2(10) << endl; // bug
 
     return 0;
 }
