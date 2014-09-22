@@ -21,6 +21,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <climits>
 
 using namespace std;
@@ -30,14 +31,13 @@ class Solution
 public:
     string minWindow(string S, string T)
     {
-        const int charSet = 256;
-        int need[charSet] = { 0 };
-        int found[charSet] = { 0 };
-        int min_len = INT_MAX, min_start = 0;
-        int cnt = 0; // count used to verify whether current window is qualified
+        int sLen = S.size(), tLen = T.size();
+        if (tLen == 0 || tLen > sLen ) return string(); // invalid
 
-        if (S.empty() || T.empty())
-            return ""; // null
+        const int charSet = 256;
+        vector<int> need(charSet, 0), cur(charSet, 0);
+        int i = 0, j = 0, s = 0, e = INT_MAX;
+        int cnt = 0; // count used to verify whether current window is qualified
 
         for (auto t : T)
             need[t]++; // construct map according to T
@@ -46,38 +46,32 @@ public:
         // i is used to track the beginning
         // j is used to find a qualified window
         // O(n)
-        for (int i = 0, j = 0; j < S.size(); j++) {
-            if (need[S[j]] != 0) {
-                found[S[j]]++;
-                if (found[S[j]] <= need[S[j]])
-                    cnt++; // we can also calculate duplicate char in T
-            }
-
-            if (cnt == T.size()) { // get one qualified window
-                //decrease window as much as possible
-                while (need[S[i]] == 0 || found[S[i]] > need[S[i]]) { // bug: need[S[i]] == 0
-                    if (found[S[i]] > need[S[i]])
-                        found[S[i]]--;
+        for (; j < sLen; j++) {
+            cur[S[j]]++;
+            if (cur[S[j]] <= need[S[j]]) cnt++;
+            if (cnt == tLen) {
+                // decrease window if possible
+                while (cur[S[i]] > need[S[i]]) {
+                    cur[S[i]]--;
                     i++;
                 }
 
-                // update window if possible
-                int tmp = j - i + 1;
-                if (tmp < min_len) {
-                    min_len = tmp;
-                    min_start = i;
+                // update answer
+                if (j - i < e - s) {
+                    s = i;
+                    e = j;
                 }
 
                 // unqualified window to start next search
                 cnt--;
-                found[S[i]]--;
+                cur[S[i]]--;
                 i++;
             }
         }
 
-        if (min_len == INT_MAX)
-            return ""; // no qualified window
-        return S.substr(min_start, min_len);
+        if (e == INT_MAX)
+            return string(); // no qualified window
+        return S.substr(s, e - s + 1);
     }
 };
 
