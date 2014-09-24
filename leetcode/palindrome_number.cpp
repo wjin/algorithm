@@ -29,11 +29,8 @@ class Solution
 public:
     bool isPalindrome(int x)
     {
-        if (x < 0) // negative number
-            return false;
-        else if (x < 10) //
-            return true;
-        else if (x % 10 == 0) // bug: the lowest number is 0, of course, it's not a palindrome except 0
+        // bug: the lowest number is 0, of course, it's not a palindrome except 0
+        if (x < 0 || (x != 0 && x % 10 == 0))
             return false;
 
         int n = 0;
