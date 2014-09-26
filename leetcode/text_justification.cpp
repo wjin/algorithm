@@ -43,85 +43,59 @@ using namespace std;
 
 class Solution
 {
-    // be carefull with last line
-    string getLastLine(vector<string> &words, size_t start, size_t end, size_t len)
+    // n is the number of space area
+    // idx is space area id [0...n-1]
+    // spaces is total space count
+    void addSpace(string &s, int idx, int n, int spaces, bool lastLine)
     {
-        string line;
-        for (size_t i = start; i < end; i++) {
-            line += words[i];
-            if (i != end - 1) {
-                line += ' ';
-            } else {
-                size_t lineSize = line.size();
-                if (lineSize != len) {
-                    line += string(len - lineSize, ' ');
-                }
-            }
-        }
-        return line;
+        int numOfSpaces = lastLine ? 1 : (spaces/n + ((idx < (spaces%n)) ? 1 : 0));
+        s.append(numOfSpaces, ' ');
     }
 
-    string getLine(vector<string> &words, size_t start, size_t end, size_t wordLen, size_t len)
+    // generate line from words[start] to words[end]
+    // curLen does not include spaces
+    // lastLine tags whether it is the last line
+    string genLine(vector<string> &words, int start, int end, int curLen, int L, bool lastLine)
     {
-        string line;
-        int totalSpace = len - wordLen; // total space count
-        int interval = 0; // average space interval
-        int mod = 0; // space remain after average
+        string ret;
 
-        if (start + 1 == end) {
-            interval = totalSpace;
-        } else {
-            interval = totalSpace / (end - start - 1);
-            mod = totalSpace % (end - start - 1);
+        for (int i = start; i < end; i++) {
+            ret += words[i];
+            addSpace(ret, i - start, end - start, L - curLen, lastLine);
         }
 
-        string space(interval, ' ');
-        for (size_t i = start; i < end; i++) {
-            line += words[i];
-            // the last word in the line
-            // it may include interval or not
-            if (line.size() == len) break;
-
-            line += space;
-            if (mod) {
-                line += ' ';
-                mod--;
-            }
-        }
-        return line;
-    }
-
-    // justfify words[index...end)
-    void justify(vector<string> &words, size_t index, size_t end, size_t len, vector<string> &ret)
-    {
-        if (index == end) return; // recursion end
-
-        int wordCnt = 1;
-        size_t i = 0;
-        int curWordSize = words[index].size();
-        for (i = index + 1; i < end; i++) {
-            // + wordCnt means the least space number
-            if (curWordSize + words[i].size() + wordCnt <= len) {
-                wordCnt++;
-                curWordSize += words[i].size();
-            } else break;
+        // last word, also deal with start == end
+        ret += words[end];
+        if (ret.size() < L) {
+            ret.append(L - ret.size(), ' ');
         }
 
-        if (i == end) {
-            ret.push_back(getLastLine(words, index, i, len));
-            return;
-        } else {
-            ret.push_back(getLine(words, index, i, curWordSize, len));
-        }
-
-        justify(words, i, end, len, ret); // tail recursion...
+        return ret;
     }
 
 public:
     vector<string> fullJustify(vector<string> &words, int L)
     {
         vector<string> ret;
-        justify(words, 0, words.size(), L, ret);
+        int len = words.size();
+
+        int curLen = 0, start = 0;
+        for (int i = 0; i < len; i++) {
+            if (curLen + words[i].size() + (i - start) > L) {
+                // get a line
+                // i - start means the number of minimum spaces
+                ret.push_back(genLine(words, start, i - 1, curLen, L, false));
+
+                // reset
+                curLen = 0;
+                start = i;
+            }
+
+            curLen += words[i].size();
+        }
+
+        // last line
+        ret.push_back(genLine(words, start, len - 1, curLen, L, true));
         return ret;
     }
 };
