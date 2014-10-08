@@ -27,7 +27,7 @@ class Solution
 public:
     double pow(double x, int n)
     {
-        if (fabs(x - 0.0000001) <= 0) return 0; // judge double number
+        if (fabs(x) <= 0.0000001) return 0; // judge double number
         if (n > 0) return do_positive_pow(x, n);
         else return 1 / do_positive_pow(x, -n);
     }
@@ -59,7 +59,7 @@ class Solution2
 public:
     double pow(double x, int n)
     {
-        if (fabs(x - 0.0000001) <= 0) return 0; // judge double number
+        if (fabs(x) <= 0.0000001) return 0; // judge double number
         if (n > 0) return do_positive_pow(x, n);
         else return 1 / do_positive_pow(x, -n);
     }

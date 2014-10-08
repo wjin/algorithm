@@ -10,24 +10,16 @@ class Solution
 public:
     void plusOne(vector<int> &digits)
     {
-        if (digits.empty()) { // empty vector
-            digits.push_back(1);
-            return;
-        }
-
         int n = digits.size() - 1;
-        int carry = 0;
-        bool firstTime = true;
+        int carry = 1;
         int sum = 0;
 
-        do {
-            sum = digits[n] + carry + (firstTime ? 1 : 0);
-            digits[n] = sum >= 10 ? (sum - 10) : sum;
-            carry = sum >= 10 ? 1 : 0;
-
+        while (carry && n >= 0) {
+            sum = digits[n] + carry;
+            digits[n] = sum % 10;
+            carry = sum / 10;
             n--;
-            firstTime = false;
-        } while (carry && n >= 0);
+        }
 
         if (carry)
             digits.insert(digits.begin(), 1);
@@ -35,7 +27,7 @@ public:
 
     void print_one_to_n(size_t n)
     {
-        vector<int> ret;
+        vector<int> ret(1, 0);
         while (true) {
             plusOne(ret);
             if (ret.size() == n + 1) break;
