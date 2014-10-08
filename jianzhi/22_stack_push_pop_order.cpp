@@ -20,13 +20,11 @@ public:
         if (pushLen != popLen) return false;
 
         stack<int> stk;
-        size_t idxPush = 0, idxPop = 0;
+        size_t idxPop = 0;
 
-        while (idxPush < pushLen) { // stop condition
-            // each cycle, push one number to stack
-            if (stk.empty() || stk.top() != pop[idxPop]) {
-                stk.push(push[idxPush++]);
-            }
+        for (auto e : push) {
+            // each cycle, push one element to stack
+            stk.push(e);
 
             // pop stack as many as possible
             while (!stk.empty() && (stk.top() == pop[idxPop])) {
