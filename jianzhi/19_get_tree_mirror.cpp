@@ -35,6 +35,18 @@ public:
 
         return root;
     }
+
+    TreeNode * getMirror2(TreeNode *root)
+    {
+        if (!root) return root;
+
+        getMirror2(root->left);
+        getMirror2(root->right);
+
+        swap(root->left, root->right);
+
+        return root;
+    }
 };
 
 void print_tree_preorder(TreeNode *root)
