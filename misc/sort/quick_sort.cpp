@@ -13,7 +13,7 @@ class QuickSort
 private:
     int partition(vector<int> &v, int start, int end)
     {
-        if(start == end) return start;
+        if (start == end) return start;
 
         int pivot = start + (random() % (end - start + 1));
         swap(v[start], v[pivot]);
@@ -32,6 +32,52 @@ private:
 
         swap(v[i], v[start]);
         return i;
+    }
+
+    int partition2(vector<int> &v, int start, int end)
+    {
+        if (start == end) return start;
+
+        int idx = start + (random() % (end - start + 1));
+        int pivot = v[idx];
+        int low = start, high = end;
+        swap(v[idx], v[end]); // swap pivot to end, not start
+
+        // after loop, low will be illegal
+        while (low < high) {
+            while (low < high && v[low] <= pivot) low++; // =
+            while (low < high && v[high] >= pivot) high--; // =
+
+            if (low < high) swap(v[low], v[high]);
+        }
+
+        // swap pivot to its position
+        swap(v[low], v[end]);
+
+        return low;
+    }
+
+    int partition3(vector<int> &v, int start, int end)
+    {
+        if (start == end) return start;
+
+        int idx = start + (random() % (end - start + 1));
+        int pivot = v[idx];
+        int low = start, high = end;
+        swap(v[idx], v[end]); // swap pivot to end, not start
+
+        // after loop, low will be illegal
+        while (low < high) {
+            if (v[low] <= pivot) low++; // =
+            else if (v[high] >= pivot) high--; // =
+            else {
+                swap(v[low], v[high]);
+            }
+        }
+
+        // swap pivot to its position
+        swap(v[low], v[end]);
+        return low;
     }
 
     void sort(vector<int> &v, int start, int end)
