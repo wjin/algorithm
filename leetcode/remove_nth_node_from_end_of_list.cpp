@@ -39,12 +39,11 @@ public:
         if (head == NULL || n <= 0)
             return head;
 
-        ListNode dumbNode(-1);
-        ListNode *p = &dumbNode;
-        p->next = head;
-        ListNode *q = p->next;  // q points to head
+        ListNode dummy(-1);
+        dummy.next = head;
+        ListNode *p = &dummy, *q = p->next;  // q points to head
 
-        while (n-- && q)
+        while (q && n--) // not (n-- && q)
             q = q->next;
 
         if (n > 0)
@@ -58,7 +57,7 @@ public:
         // dumb node makes it easy
         // delete, regardless of whether it is first, middle or last node
         p->next = p->next->next;
-        return dumbNode.next;
+        return dummy.next;
     }
 };
 
