@@ -125,6 +125,36 @@ public:
     }
 };
 
+class Solution3
+{
+public:
+    int count(int num)
+    {
+        int cnt = 0, factor = 1;
+        int low = 0, high = 0, cur = 0;
+
+        while (num / factor) {
+            low = num - (num / factor) * factor;
+            cur = (num / factor) % 10;
+            high = num / (factor * 10);
+
+            switch (cur) {
+            case 0:
+                cnt += high * factor;
+                break; //
+            case 1:
+                cnt += high * factor +  low + 1;
+                break;
+            default: // cur > 1
+                cnt += (high + 1) * factor;
+            };
+
+            factor *= 10;
+        }
+        return cnt;
+    }
+};
+
 int main(int argc, char *argv[])
 {
 #ifndef ONLINE_JUDGE
