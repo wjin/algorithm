@@ -55,11 +55,14 @@ private:
 public:
     string getMaxNum(vector<string> &v)
     {
-        sort(v.begin(), v.end(), func);
-        string ret;
-        for (size_t i = 0; i < v.size(); i++)
-            ret += v[i];
+        stringstream ss;
 
+        sort(v.begin(), v.end(), func);
+        for (size_t i = 0; i < v.size(); i++)
+            ss << v[i];
+
+        string ret;
+        ss >> ret;
         return ret;
     }
 };
@@ -75,18 +78,11 @@ int main(int argc, char *argv[])
     int m, t;
     vector<string> num;
 
-    stringstream ss;
-    string str;
-
     while (cin >> m) {
         num.clear();
         for (int i = 0; i < m ; i++) {
             cin >> t;
-            ss << t;
-            ss >> str;
-            num.push_back(str);
-
-            ss.clear();
+            num.push_back(to_string(t));
         }
         cout << sol.getMaxNum(num) << endl;
     }
