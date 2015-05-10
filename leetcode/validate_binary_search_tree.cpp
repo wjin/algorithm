@@ -80,10 +80,35 @@ private:
     }
 };
 
+class Solution3
+{
+public:
+    bool isValidBST(TreeNode *root)
+    {
+		int pre = INT_MIN;
+        return isValidBST(root, pre);
+    }
+
+private:
+    bool isValidBST(TreeNode *t, int &pre)
+    {
+        if (!t) return true;
+		if (!isValidBST(t->left, pre)) return false;
+
+		if (t->val <= pre) return false;
+		pre = t->val;
+
+		if (!isValidBST(t->right, pre)) return false;
+
+		return true;
+    }
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
     Solution2 sol2;
+    Solution3 sol3;
 
     TreeNode *root = new TreeNode(1);
     root->right = new TreeNode(3);
@@ -93,6 +118,9 @@ int main(int argc, char *argv[])
     cout << ret << endl;
 
     ret = sol2.isValidBST(root);
+    cout << ret << endl;
+
+    ret = sol3.isValidBST(root);
     cout << ret << endl;
 
     return 0;
