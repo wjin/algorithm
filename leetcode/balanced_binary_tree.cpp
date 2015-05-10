@@ -104,11 +104,41 @@ private:
     }
 };
 
+class Solution4
+{
+public:
+    bool isBalanced(TreeNode *root)
+    {
+		bool tag = true;
+        checkHeight(root, tag);
+		return tag;
+    }
+
+private:
+    int checkHeight(TreeNode *t, bool &tag)
+    {
+		if (!tag) return 0; // end as soon as possible
+        if (!t) return 0;
+
+        int leftHeight = checkHeight(t->left, tag);
+        int rightHeight = checkHeight(t->right, tag);
+
+        // compare
+        if (abs(leftHeight - rightHeight) > 1) {
+			tag = false;
+			return 0;
+		}
+
+        return max(leftHeight, rightHeight) + 1;
+    }
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
     Solution2 sol2;
     Solution3 sol3;
+    Solution4 sol4;
 
     TreeNode *root = new TreeNode(3);
     root->left = new TreeNode(9);
@@ -128,6 +158,9 @@ int main(int argc, char *argv[])
 
     cout << sol3.isBalanced(root) << endl;
     cout << sol3.isBalanced(root2) << endl;
+
+    cout << sol4.isBalanced(root) << endl;
+    cout << sol4.isBalanced(root2) << endl;
 
     return 0;
 }
