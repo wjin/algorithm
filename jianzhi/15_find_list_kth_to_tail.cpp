@@ -37,7 +37,7 @@ public:
         return p->val;
     }
 
-    // recursive solutioin
+    // recursive solution
     void find(ListNode *l, int &k, int &ret)
     {
         if (!l) return;
