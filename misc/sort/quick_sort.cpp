@@ -80,6 +80,22 @@ private:
         return low;
     }
 
+	int partition4(vector<int> &v, int start, int end)
+	{
+		int idx = start + (random() % (end - start + 1));
+		swap(v[idx], v[end]); // swap pivot element to end
+		int pivot = start;
+
+		for (int i = start; i < end; i++) {
+			if (v[i] < v[end]) {
+				swap(v[pivot++], v[i]);
+			}
+		}
+
+		swap(v[pivot], v[end]);
+		return pivot;
+	}
+
     void sort(vector<int> &v, int start, int end)
     {
         if (start < end) {
