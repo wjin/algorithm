@@ -9,29 +9,20 @@ using namespace std;
 class Solution
 {
 private:
-
-    // generates number in the range [start, end]
-    int getRandom(int start, int end)
+    int partition(vector<int> &v, int start, int end)
     {
-        default_random_engine generator;
-        uniform_int_distribution<int> distribution(start, end);
-        return distribution(generator);
-    }
+        int sub = start + (random() % (end - start + 1));
+		swap(v[sub], v[end]);
 
-    int partition(vector<int> &num, int start, int end)
-    {
-        int pivot = num[getRandom(start, end)];
+		int idx = start;
+		for (int i = start; i < end; i++) {
+			if (v[i] < v[end]) {
+				swap(v[i], v[idx++]);
+			}
+		}
 
-        while (start < end) {
-            if (num[start] < pivot) start++;
-            else if (num[end] > pivot) end--;
-            else {
-                swap(num[start], num[end]);
-            }
-        }
-
-        num[start] = pivot;
-        return start;
+		swap(v[idx], v[end]);
+		return idx;
     }
 
 public:
