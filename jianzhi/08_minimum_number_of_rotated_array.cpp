@@ -36,6 +36,36 @@ public:
     }
 };
 
+// find minimum of rotated sorted array
+class Solution2
+{
+	public:
+		int minimum_of_rotated_sorted_array(const vector<int> &v)
+		{
+			int len = v.size();
+			if (len == 0) throw runtime_error("invalid input"); // invalid
+			if (len == 1) return v[0];
+
+			int low = 0, high = len - 1;
+			if (v[low] < v[high]) return v[low]; // rotate entire array, back to original array
+
+			while (v[low] >= v[high]) {
+				if (low + 1 == high) return v[high]; // be careful
+
+				int mid = low + (high - low) / 2;
+
+				if (v[low] == v[mid] && v[mid] == v[high]) { // special case, cannot judge, increase low
+					low++;
+				} else if (v[low] <= v[mid]) { // first half is ascending
+					low = mid;
+				} else {
+					high = mid;
+				}
+			}
+			// return v[high];
+		}
+};
+
 int main(int argc, char *argv[])
 {
     Solution sol;
